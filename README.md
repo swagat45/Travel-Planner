@@ -113,9 +113,8 @@ A styled `output.html` file that lists:
 
 ## 🙋‍♂️ Author
 
-**Swagat Mishra**  
-B.Tech IT Student | Full Stack Developer | Machine Learning Enthusiast  
-[LinkedIn](https://www.linkedin.com/in/your-profile) | [GitHub](https://github.com/your-username)
+**Swagat Suman Mishra**  
+B.Tech IT Student | IIIT Bhubaneswar
 
 ---
 
