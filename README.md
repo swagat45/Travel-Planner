@@ -1,123 +1,80 @@
+# Travel Planner – C++17 Route Engine 🚀
 
-# 🧭 Travel Planner - Route Optimization Tool
+An **offline path‑finding engine** that parses real city/route data, builds a weighted graph, and outputs the **cheapest _or_ fastest** itinerary as an interactive Google‑Maps web page.
 
-A C++ console application that helps users find the most **cost-effective** or **fastest** travel route between cities using **Dijkstra’s algorithm**. The project dynamically builds a graph from city and route data files and outputs the optimal path in a user-friendly HTML file.
-
----
-
-## 🚀 Features
-
-- 🗺️ **Dynamic Graph Construction** from input files
-- ⚡ **Fastest or Cheapest Path Calculation** using Dijkstra’s Algorithm
-- 📂 **User Input Support** for custom files, origin/destination, and preference
-- 📄 **HTML Output Generation** with full route breakdown
-- 🧩 **Modular Design** using object-oriented principles
+<p align="center">
+  <img src="demo_screenshot.png" width="70%" alt="Sample output screenshot">
+</p>
 
 ---
 
-## 📂 File Structure
+## ✨ Features
 
-```
-.
-├── Main.cpp                   # Program entry point
-├── GraphFunctions.h          # Graph class and Dijkstra's algorithm
-├── FileOperations.h          # HTML output generation
-├── Location.h                # Location (City) class
-├── Route.h                   # Route (Edge) class
-├── Parser.h                  # Parsers for cities and routes
-├── cities.txt                # Sample city data (tab-separated)
-├── routes.txt                # Sample route data (CSV)
-├── output.html               # Generated route visualization
-```
+| Category | What it does |
+|----------|--------------|
+| **Algorithmic Core** | Runs Dijkstra (⚡️ O((V + E) log V)) on a graph of locations & routes; easily extensible to A*. |
+| **Configurable Metric** | Optimise by **`Metric::Cost`** *or* **`Metric::Time`** – no more magic booleans. |
+| **Crash‑proof Parsing** | Hardened CSV loaders skip / log malformed rows instead of crashing. |
+| **Google‑Maps Visualisation** | Generates a self‑contained HTML with markers, polylines & hop‑by‑hop tool‑tips. |
+| **Modern C++ Build** | Warning‑free with `-Wall -Wextra`, AddressSanitizer clean, CMake one‑liner build. |
 
 ---
 
-## 📥 Input Format
-
-### 🔹 `cities.txt` (Tab-separated)
-```
-Country    Capital    Latitude    Longitude
-India      New Delhi  28.6167     77.2167
-...
-```
-
-### 🔹 `routes.txt` (CSV)
-```
-Origin,Destination,Transport,Time,Cost,Note
-New Delhi,Mumbai,train,15,200,Scenic route
-...
-```
-
----
-
-## 🧠 How It Works
-
-1. **Parse** the input files using `locationParser` and `routeParser`
-2. **Construct** a graph with cities as nodes and routes as edges
-3. **Run Dijkstra’s algorithm** based on user preference (fastest or cheapest)
-4. **Backtrack** using stacks to record the optimal path
-5. **Generate an HTML file** visualizing the route step-by-step
-
----
-
-## 🛠️ How to Run
-
-### 🔧 Requirements
-- C++17 or later
-- g++ or any C++ compiler
-
-### ▶️ Compile and Run
+## 🔧 Quick Start
 
 ```bash
-g++ Main.cpp -o travel_planner
-./travel_planner
+# clone
+git clone https://github.com/<you>/travel-planner.git
+cd travel-planner
+
+# build (Release or Debug)
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+
+# run (Cheapest route Delhi ➜ Leh)
+export MAPS_API_KEY=<your-google-maps-key>   # optional but recommended
+./build/planner data/cities.csv data/routes.csv output.html Delhi Leh cost
+open output.html        # or xdg-open on Linux
 ```
 
-You’ll be prompted to enter:
-- Cities file (e.g., `cities.txt`)
-- Routes file (e.g., `routes.txt`)
-- Output filename (e.g., `output.html`)
-- Origin city
-- Destination city
-- Preference (`fastest` or `cheapest`)
+> **Tip:** The binary is AddressSanitizer‑clean – add `-DCMAKE_BUILD_TYPE=Debug` to verify.
 
 ---
 
-## 📤 Output
+## 🗂️ Code Layout
 
-A styled `output.html` file that lists:
-- Cities visited in order
-- Routes taken with mode, time, and cost
-- Total travel time/cost based on preference
-
----
-
-## 🧩 Algorithms & Concepts
-
-- **Graph Representation** (Adjacency via city-linked routes)
-- **Dijkstra’s Algorithm** with a min-heap (priority queue)
-- **Dynamic Data Binding** using pointers and parsers
-- **Stack-based Backtracking** to reconstruct paths
-- **File I/O & HTML Generation**
+```
+├── CMakeLists.txt          # 20‑line reproducible build
+├── src/
+│   ├── Main.cpp            # CLI wrapper
+│   ├── GraphFunctions.h    # Dijkstra & helpers (Metric enum lives here)
+│   ├── FileOperations.h    # CSV parsers + HTML generator
+│   └── …                   # Data models (Location, Route)
+└── data/
+    ├── cities.csv
+    └── routes.csv
+```
 
 ---
 
-## 📈 Future Improvements
+## 🛣️ Internals – 3‑Step Flow
 
-- 🌍 Map visualization using latitude/longitude (e.g., Leaflet.js or Google Maps)
-- 📱 GUI frontend using Qt or web-based technologies
-- 🚌 Multi-modal transportation optimization
-- 📊 Analytics dashboard for travel data
-
----
-
-## 🙋‍♂️ Author
-
-**Swagat Suman Mishra**  
-B.Tech IT Student | IIIT Bhubaneswar
+1. **Parse** → `locationParser()` & `routeParser()` load `cities.csv` + `routes.csv` into objects.  
+2. **Search** → `Graph::Dijkstras(origin, Metric::Cost)` finds the optimal path, storing `lengthFromStart` & `parent` in each node.  
+3. **Render** → `outputGenerator()` emits `output.html` with JS that plots the route on Google Maps.
 
 ---
 
-## 📄 License
+## 🏗️ Extending the Project
 
-This project is licensed under the MIT License. Feel free to use, modify, and distribute it for educational or commercial use.
+* **A\*** with Haversine heuristic for faster long‑haul searches.  
+* **REST wrapper** (FastAPI / Pistache) + Dockerfile to drop into a micro‑service.  
+* **Unit tests** with GoogleTest (Dijkstra correctness, parser edge cases).  
+* **Multi‑criterion scoring** (cost × time × carbon).
+
+---
+
+## 📜 License
+
+MIT – do what you want, just give credit.  Pull requests welcome!
+
