@@ -115,6 +115,7 @@ void outputGenerator(string filename, stack<Location*> cities, stack<Route*> rou
 	Route* route;
 
 	float cost;
+	
 
 	
 
