@@ -87,6 +87,7 @@ int main(int argc, char* argv[]){
 		return 0;
 	}
 
+    Metric metric = biPreference ? Metric::Cost : Metric::Time;
 	Graph graph(citiesFilename, routesFilename);
 
 	if(graph.getCity(origin) == NULL || graph.getCity(destination) == NULL){
@@ -95,7 +96,7 @@ int main(int argc, char* argv[]){
 	}
 
 
-	graph.Dijkstras(origin,biPreference);
+	graph.Dijkstras(origin, metric);
 
 	stack<Location*> cityStack = graph.cityStacker(destination);
 	stack<Route*> routeStack = graph.routeStacker(destination, biPreference);

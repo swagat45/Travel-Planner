@@ -14,6 +14,10 @@
 
 using namespace std;
 
+// Modern enum to replace ambiguous bool flags
+enum class Metric { Cost, Time }; // Cost = true, Time = false compatibility
+
+
 class Graph{
 public:
 	vector<Location*> cities;
@@ -38,6 +42,10 @@ public:
 	
 	stack<Location*>cityStacker(string destinationS);
 	stack<Route*> routeStacker(string destinationS, bool costOrTime);
+	// --- Modern enum-based overloads ---
+	float getWeight(string startS, string endS, Metric metric);
+	float getWeight(Location* start, Location* end, Metric metric);
+	void Dijkstras(string startS, Metric metric);
 
 //-----------------------------------------------------------------------
 /*	SCRAPPED METHODS
@@ -303,4 +311,18 @@ void Graph::printOutRoutes(){
 }
 */
 
+
+// -------------------- Modern overload definitions --------------------
+inline float Graph::getWeight(string startS, string endS, Metric metric){
+    return getWeight(startS, endS, metric == Metric::Cost);
+}
+
+inline float Graph::getWeight(Location* start, Location* end, Metric metric){
+    return getWeight(start, end, metric == Metric::Cost);
+}
+
+inline void Graph::Dijkstras(string startS, Metric metric){
+    Dijkstras(startS, metric == Metric::Cost);
+}
+// ---------------------------------------------------------------------
 #endif
