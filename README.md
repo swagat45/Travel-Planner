@@ -3,7 +3,7 @@
 An **offline path‑finding engine** that parses real city/route data, builds a weighted graph, and outputs the **cheapest _or_ fastest** itinerary as an interactive Google‑Maps web page.
 
 <p align="center">
-  <img src="route_screenshot.png" width="70%" alt="Sample output screenshot">
+  <img src="route_visual.png" width="70%" alt="Sample output screenshot">
 </p>
 
 ---
